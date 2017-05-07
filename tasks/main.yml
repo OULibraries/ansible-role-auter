@@ -1,0 +1,31 @@
+---
+- name: Ensure that the auter package is installed
+  tags: auter
+  yum:
+    enablerepo: epel
+    name: auter
+    state: present
+    update_cache: yes
+  register: auter_yum
+
+- block:
+    - name: Applying auter.conf configurations
+      template:
+        src: auter.conf.j2
+        dest: /etc/auter/auter.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Including auter cronjob configuration
+      include: auter_cronjobs.yml
+
+    - name: Including auter scripts configuration
+      include: auter_scripts.yml
+
+    - name: Enabling the auter service
+      command: |
+        /bin/auter --enable
+  tags: auter
+  when: auter_yum|success
+...

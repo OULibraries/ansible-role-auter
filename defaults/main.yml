@@ -1,0 +1,8 @@
+---
+auter_auto_reboot: False
+auter_config_set: default
+auter_max_delay: 3600
+auter_only_install_from_prep: False
+auter_package_manager_options: ''
+auter_pre_download_updates: True
+...

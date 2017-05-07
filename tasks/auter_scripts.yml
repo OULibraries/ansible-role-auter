@@ -1,0 +1,19 @@
+---
+- name: Applying auter pre/post scripts
+  tags: auter
+  template:
+    src: auter_scripts.j2
+    dest: "{{ item.0.path }}/{{ item.1.name }}"
+    owner: root
+    group: root
+    mode: "{{ item.1.mode }}"
+  with_subelements:
+    - "{{ auter_scripts }}"
+    - scripts
+  when:
+    - auter_scripts is defined
+    - item.0.path is defined
+    - item.1.name is defined
+    - item.1.mode is defined
+    - item.1.base64 is defined
+...
