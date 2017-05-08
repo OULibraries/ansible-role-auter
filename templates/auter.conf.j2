@@ -38,7 +38,7 @@ MAXDELAY="{{ auter_max_delay if auter_max_delay is defined else '3600' }}"
 
 # Directories containing scripts to execute before/after updates are applied, 
 # and before/after a reboot (if applicable)
-PREAPPLYSCRIPTDIR="{{ auter_scripts.pre_apply.path if auter_scripts.pre_apply.path is defined else '/etc/auter/pre-apply.d' }}"
-POSTAPPLYSCRIPTDIR="{{ auter_scripts.post_apply.path if auter_scripts.post_apply.path is defined else '/etc/auter/post-apply.d' }}"
-PREREBOOTSCRIPTDIR="{{ auter_scripts.pre_reboot.path if auter_scripts.pre_reboot.path is defined else '/etc/auter/pre-reboot.d' }}"
-POSTREBOOTSCRIPTDIR="{{ auter_scripts.post_reboot.path if auter_scripts.post_reboot.path is defined else '/etc/auter/post-reboot.d' }}"
+PREAPPLYSCRIPTDIR="{{ auter_scripts.pre_apply.path if auter_scripts.pre_apply is defined else '/etc/auter/pre-apply.d' }}"
+POSTAPPLYSCRIPTDIR="{{ auter_scripts.post_apply.path if auter_scripts.post_apply is defined else '/etc/auter/post-apply.d' }}"
+PREREBOOTSCRIPTDIR="{{ auter_scripts.pre_reboot.path if auter_scripts.pre_reboot is defined else '/etc/auter/pre-reboot.d' }}"
+POSTREBOOTSCRIPTDIR="{{ auter_scripts.post_reboot.path if auter_scripts.post_reboot is defined else '/etc/auter/post-reboot.d' }}"
