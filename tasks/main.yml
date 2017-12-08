@@ -1,11 +1,11 @@
 ---
 - name: Ensure that the auter package is installed
   tags: auter
+  become: true
   yum:
     enablerepo: epel
     name: auter
     state: present
-    update_cache: yes
   register: auter_yum
 
 - block:
@@ -17,15 +17,22 @@
         group: root
         mode: 0644
 
-    - name: Including auter cronjob configuration
-      include: auter_cronjobs.yml
+    - name: Executing auter cronjob tasks
+      import_tasks: auter_cronjobs.yml
+      when:
+        - auter_cronjobs is defined
+        - auter_cronjobs|length > 0
 
-    - name: Including auter scripts configuration
-      include: auter_scripts.yml
+    - name: Executing auter scripts tasks
+      import_tasks: auter_scripts.yml
+      when:
+        - auter_scripts is defined
+        - auter_scripts|length > 0
 
     - name: Enabling the auter service
       command: |
         /bin/auter --enable
   tags: auter
+  become: true
   when: auter_yum|success
 ...

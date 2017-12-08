@@ -1,23 +1,19 @@
 ---
-- block:
-    - name: Removing auter crontab file
-      file:
-        path: /etc/cron.d/auter
-        state: absent
-
-    - name: Applying auter cronjob configuration
-      cron:
-        cron_file: /etc/cron.d/auter
-        name: "{{ item.name }}"
-        job: "{{ item.job }}"
-        minute: "{{ item.minute }}"
-        hour: "{{ item.hour }}"
-        weekday: "{{ item.weekday }}"
-        day: "{{ item.day }}"
-        month: "{{ item.month }}"
-        state: present
-        user: root
-      with_items: "{{ auter_cronjobs }}"
-  tags: auter
-  when: auter_cronjobs is defined
+- name: Applying auter cronjob configuration
+  cron:
+    cron_file: /etc/cron.d/auter
+    day: "{{ item.day|default(omit) }}"
+    hour: "{{ item.hour|default(omit) }}"
+    job: "{{ item.job }}"
+    minute: "{{ item.minute|default(omit) }}"
+    month: "{{ item.month|default(omit) }}"
+    name: "{{ item.name }}"
+    special_time: "{{ item.special_time|default(omit) }}"
+    state: "{{ item.state|default('present') }}"
+    user: "{{ item.user|default('root') }}"
+    weekday: "{{ item.weekday|default(omit) }}"
+  with_items: "{{ auter_cronjobs }}"
+  when:
+    - item.job is defined
+    - item.name is defined
 ...

@@ -3,7 +3,7 @@
 # Set a tag which will be used for files related to this configuration.
 # Log files and postreboot jobs will both be named using this tag.
 # IMPORTANT: This tag MUST BE UNIQUE on a system.
-CONFIGSET="{{ auter_config_set if auter_config_set is defined else 'default' }}"
+CONFIGSET="{{ auter_config_set }}"
 
 # Set whether server will reboot automatically after --apply. A warning
 # message will show for logged in users 2 mins before the reboot. The 
@@ -13,7 +13,7 @@ AUTOREBOOT="{{ 'yes' if auter_auto_reboot is defined and auter_auto_reboot else 
 # Options to pass to yum/dnf update. For example, this can be used to 
 # disable excludes or omit packages. If dnf is installed, it will be the
 # preferred package manager.
-PACKAGEMANAGEROPTIONS="{{ auter_package_manager_options if auter_package_manager_options is defined else '' }}"
+PACKAGEMANAGEROPTIONS="{{ auter_package_manager_options }}"
 
 # If the --downloadonly option is available then updates will be downloaded
 # during --prep
@@ -34,7 +34,7 @@ ONLYINSTALLFROMPREP="{{ 'yes' if auter_only_install_from_prep is defined and aut
 # This is used to stagger load on the repository servers. Default is
 # 3600 seconds so yum/dnf waits a random time between 1 and 3600 seconds.
 # Value is set in seconds
-MAXDELAY="{{ auter_max_delay if auter_max_delay is defined else '3600' }}"
+MAXDELAY="{{ auter_max_delay }}"
 
 # Directories containing scripts to execute before/after updates are applied, 
 # and before/after a reboot (if applicable)

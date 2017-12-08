@@ -1,6 +1,5 @@
 ---
-- name: Applying auter pre/post scripts
-  tags: auter
+- name: Applying auter pre/post upgrade scripts
   template:
     src: auter_scripts.j2
     dest: "{{ item.0.path }}/{{ item.1.name }}"
@@ -11,7 +10,6 @@
     - "{{ auter_scripts }}"
     - scripts
   when:
-    - auter_scripts is defined
     - item.0.path is defined
     - item.1.name is defined
     - item.1.mode is defined

@@ -74,7 +74,7 @@ Additional variables not defined by default
 
 ## License
 
-BSD
+GPLv3
 
 ## Author Information
 
