@@ -16,14 +16,21 @@ This role requires that you have the epel repository installed.
 
 Available variables are listed below, along with default values:
 
-    auter_auto_reboot: false
-    auter_config_set: default
+    auter_autoreboot: false
+    auter_configset: default
     auter_cronjobs: []
-    auter_max_delay: 3600
-    auter_only_install_from_prep: false
-    auter_package_manager_options: ''
-    auter_pre_download_updates: true
-    auter_scripts: {}
+    auter_maxdelay: 3600
+    auter_onlyinstallfromprep: false
+    auter_packagemanageroptions: ''
+    auter_postapplyscriptdir: /etc/auter/post-apply.d
+    auter_postapplyscripts: []
+    auter_postrebootscriptdir: /etc/auter/post-reboot.d
+    auter_postrebootscripts: []
+    auter_preapplyscriptdir: /etc/auter/pre-apply.d
+    auter_preapplyscripts: []
+    auter_predownloadupdates: true
+    auter_prerebootscriptdir: /etc/auter/pre-reboot.d
+    auter_prerebootscripts: []
 
 ## Dependencies
 
@@ -34,7 +41,7 @@ None
     - hosts: servers
       roles:
         - role: linuxhq.auter
-          auter_only_install_from_prep: true
+          auter_onlyinstallfromprep: true
           auter_cronjobs:
             - name: Pre-download updates before applying
               job: /usr/bin/auter --prep
@@ -50,21 +57,16 @@ None
               weekday: '*'
               day: '*'
               month: '*'
-          auter_scripts:
-            pre_apply:
-              path: /etc/auter/pre-apply.d
-              scripts:
-                - name: pre_apply.sh
-                  mode: 0755
-                  base64: |
-                    ZWNobyBwcmVfYXBwbHkK
-            post_apply:
-              path: /etc/auter/post-apply.d
-              scripts:
-                - name: post_apply.sh
-                  mode: 0755
-                  base64: |
-                    ZWNobyBwb3N0X2FwcGx5Cg==
+          auter_preapplyscripts:
+            - name: pre_apply.sh
+              mode: 700
+              base64: |
+                ZWNobyBwcmVfYXBwbHkK
+          auter_postapplyscripts:
+            - name: post_apply.sh
+              mode: 700
+              base64: |
+                ZWNobyBwb3N0X2FwcGx5Cg==
 
 ## License
 
