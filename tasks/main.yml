@@ -8,31 +8,63 @@
     state: present
   register: auter_yum
 
-- block:
-    - name: Applying auter.conf configurations
-      template:
-        src: auter.conf.j2
-        dest: /etc/auter/auter.conf
-        owner: root
-        group: root
-        mode: 0644
-
-    - name: Executing auter cronjob tasks
-      import_tasks: auter_cronjobs.yml
-      when:
-        - auter_cronjobs is defined
-        - auter_cronjobs|length > 0
-
-    - name: Executing auter scripts tasks
-      import_tasks: auter_scripts.yml
-      when:
-        - auter_scripts is defined
-        - auter_scripts|length > 0
-
-    - name: Enabling the auter service
-      command: |
-        /bin/auter --enable
+- name: Attempting to overlay auter configurations
   tags: auter
   become: true
-  when: auter_yum|success
+  template:
+    src: auter.conf.j2
+    dest: /etc/auter/auter.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: auter_yum is success
+
+- name: Attempting to overlay auter cronjobs, if applicable
+  tags: auter
+  become: true
+  cron:
+    cron_file: /etc/cron.d/auter
+    day: "{{ item.day|default(omit) }}"
+    hour: "{{ item.hour|default(omit) }}"
+    job: "{{ item.job }}"
+    minute: "{{ item.minute|default(omit) }}"
+    month: "{{ item.month|default(omit) }}"
+    name: "{{ item.name }}"
+    special_time: "{{ item.special_time|default(omit) }}"
+    state: "{{ item.state|default('present') }}"
+    user: "{{ item.user|default('root') }}"
+    weekday: "{{ item.weekday|default(omit) }}"
+  with_items: "{{ auter_cronjobs }}"
+  when:
+    - auter_cronjobs|length > 0
+    - auter_yum is success
+    - item.job is defined
+    - item.name is defined
+
+- name: Attempting to overlay auter scripts, if applicable
+  tags: auter
+  become: true
+  template:
+    src: auter_scripts.j2
+    dest: "{{ item.0.path }}/{{ item.1.name }}"
+    owner: root
+    group: root
+    mode: "{{ item.1.mode }}"
+  with_subelements:
+    - "{{ auter_scripts }}"
+    - scripts
+  when:
+    - auter_scripts|length > 0
+    - auter_yum is success
+    - item.0.path is defined
+    - item.1.name is defined
+    - item.1.mode is defined
+    - item.1.base64 is defined
+
+- name: Ensure that auter is started and enabled on boot
+  tags: auter
+  become: true
+  command: |
+    /bin/auter --enable
+  when: auter_yum is success
 ...

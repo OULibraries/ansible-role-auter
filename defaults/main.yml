@@ -1,8 +1,10 @@
 ---
-auter_auto_reboot: False
+auter_auto_reboot: false
 auter_config_set: default
+auter_cronjobs: []
 auter_max_delay: 3600
-auter_only_install_from_prep: False
+auter_only_install_from_prep: false
 auter_package_manager_options: ''
-auter_pre_download_updates: True
+auter_pre_download_updates: true
+auter_scripts: {}
 ...
