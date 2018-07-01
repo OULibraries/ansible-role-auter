@@ -1,6 +1,7 @@
 ---
 dependencies: []
 galaxy_info:
+  role_name: auter
   author: tkimball83
   description: RHEL/CentOS - Automatic updates for RHEL, CentOS or Fedora Linux servers
   license: GPLv3
