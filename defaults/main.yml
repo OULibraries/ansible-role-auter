@@ -5,13 +5,16 @@ auter_cronjobs: []
 auter_maxdelay: 3600
 auter_onlyinstallfromprep: false
 auter_packagemanageroptions: ''
+auter_postprepscriptdir: /etc/auter/post-prep.d
+auter_postprepscripts: []
 auter_postapplyscriptdir: /etc/auter/post-apply.d
 auter_postapplyscripts: []
 auter_postrebootscriptdir: /etc/auter/post-reboot.d
 auter_postrebootscripts: []
+auter_preprepscriptdir: /etc/auter/pre-prep.d
+auter_preprepscripts: []
 auter_preapplyscriptdir: /etc/auter/pre-apply.d
 auter_preapplyscripts: []
 auter_predownloadupdates: true
 auter_prerebootscriptdir: /etc/auter/pre-reboot.d
 auter_prerebootscripts: []
-...

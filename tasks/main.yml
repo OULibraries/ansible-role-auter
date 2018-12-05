@@ -29,8 +29,10 @@
     mode: 0755
     state: directory
   with_items:
+    - "{{ auter_postprepscriptdir }}"
     - "{{ auter_postapplyscriptdir }}"
     - "{{ auter_postrebootscriptdir }}"
+    - "{{ auter_preprepscriptdir }}"
     - "{{ auter_preapplyscriptdir }}"
     - "{{ auter_prerebootscriptdir }}"
   when: auter_yum is success
@@ -57,11 +59,44 @@
     - item.job is defined
     - item.name is defined
 
+- name: Attempting to overlay auter pre-prep scripts, if applicable
+  tags: auter
+  become: true
+  template:
+    src: "{{ item.name }}"
+    dest: "{{ auter_preprepscriptdir }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode|default(0750) }}"
+  with_items: "{{ auter_preprepscripts }}"
+  when:
+    - auter_preprepscripts|length > 0
+    - auter_yum is success
+    - item.name is defined
+    
+
+- name: Attempting to overlay auter post-prep scripts, if applicable
+  tags: auter
+  become: true
+  template:
+    src: "{{ item.name }}" 
+    dest: "{{ auter_postprepscriptdir }}/{{ item.name }}"
+    owner: root
+    group: root
+    mode: "{{ item.mode|default(0750) }}"
+  with_items: "{{ auter_postprepscripts }}"
+  when:
+    - auter_postprepscripts|length > 0
+    - auter_yum is success
+    - item.name is defined
+    
+
+
 - name: Attempting to overlay auter pre-apply scripts, if applicable
   tags: auter
   become: true
   template:
-    src: auter_scripts.j2
+    src: "{{ item.name }}"
     dest: "{{ auter_preapplyscriptdir }}/{{ item.name }}"
     owner: root
     group: root
@@ -71,13 +106,13 @@
     - auter_preapplyscripts|length > 0
     - auter_yum is success
     - item.name is defined
-    - item.base64 is defined
+    
 
 - name: Attempting to overlay auter post-apply scripts, if applicable
   tags: auter
   become: true
   template:
-    src: auter_scripts.j2
+    src: "{{ item.name }}"
     dest: "{{ auter_postapplyscriptdir }}/{{ item.name }}"
     owner: root
     group: root
@@ -87,13 +122,13 @@
     - auter_postapplyscripts|length > 0
     - auter_yum is success
     - item.name is defined
-    - item.base64 is defined
+    
 
 - name: Attempting to overlay auter pre-reboot scripts, if applicable
   tags: auter
   become: true
   template:
-    src: auter_scripts.j2
+    src: "{{ item.name }}"
     dest: "{{ auter_prerebootscriptdir }}/{{ item.name }}"
     owner: root
     group: root
@@ -103,13 +138,13 @@
     - auter_prerebootscripts|length > 0
     - auter_yum is success
     - item.name is defined
-    - item.base64 is defined
+    
 
 - name: Attempting to overlay auter post-reboot scripts, if applicable
   tags: auter
   become: true
   template:
-    src: auter_scripts.j2
+    src: "{{ item.name }}"
     dest: "{{ auter_postrebootscriptdir }}/{{ item.name }}"
     owner: root
     group: root
@@ -119,7 +154,7 @@
     - auter_postrebootscripts|length > 0
     - auter_yum is success
     - item.name is defined
-    - item.base64 is defined
+    
 
 - name: Ensure that auter is started and enabled on boot
   tags: auter
@@ -127,4 +162,3 @@
   command: |
     /bin/auter --enable
   when: auter_yum is success
-...
